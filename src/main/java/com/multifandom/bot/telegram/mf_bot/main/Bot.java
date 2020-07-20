@@ -33,7 +33,6 @@ public class Bot extends TelegramLongPollingBot {
     public String getBotToken() {
         return Config.get("TOKEN");
     }
-
     public void sendMessage(String text, Message message) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(message.getChatId());

@@ -3,6 +3,8 @@ package com.multifandom.bot.telegram.mf_bot.commands;
 import com.multifandom.bot.telegram.mf_bot.command.CommandContext;
 import com.multifandom.bot.telegram.mf_bot.command.ICommand;
 import com.multifandom.bot.telegram.mf_bot.main.Bot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,6 +20,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class StartCommand implements ICommand {
+    Logger logger = LoggerFactory.getLogger(StartCommand.class);
     @Override
     public void handle(CommandContext ctx){
         Update event = ctx.getEvent();
@@ -36,12 +39,10 @@ public class StartCommand implements ICommand {
                 sendMessage.setReplyMarkup(inlineKeyboardMarkup);
 
                 Bot.getINSTANCE().execute(sendMessage);
-                System.out.println("receive: " + message.getMessageId());
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
         }else {
-            System.out.println(event.getCallbackQuery().getData());
             EditMessageText editMessage = new EditMessageText();
             if(ctx.getArgs().get(0).equals("yes_lang")){
                 editMessage.setText(event.getCallbackQuery().getMessage().getText());
@@ -53,13 +54,11 @@ public class StartCommand implements ICommand {
             editMessage.setMessageId(event.getCallbackQuery().getMessage().getMessageId());
             editMessage.setChatId(event.getCallbackQuery().getMessage().getChatId());
             editMessage.setInlineMessageId(event.getCallbackQuery().getInlineMessageId());
-            System.out.println(editMessage);
             try {
                 Bot.getINSTANCE().execute(editMessage);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
-
         }
     }
     private InlineKeyboardMarkup createKeyboard(ResourceBundle bundle){
